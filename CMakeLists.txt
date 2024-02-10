@@ -4,9 +4,12 @@ set(CXX_STANDARD 17)
 
 project(PathfindingAlgorithms)
 
-include_directories(${PROJECT_SOURCE_DIR}/libraries/SFML/include)
+include_directories(${PROJECT_SOURCE_DIR}/libraries/SFML/include
+                    ${PROJECT_SOURCE_DIR}/include)
 
-add_executable(PathfindingAlgorithms main.cpp)
+set(SOURCES src/node.cpp src/grid.cpp)
+
+add_executable(PathfindingAlgorithms main.cpp ${SOURCES})
 
 target_link_libraries(PathfindingAlgorithms 
         ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/libsfml-graphics-s-d.a
