@@ -1,7 +1,8 @@
 #define SFML_STATIC
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
-#include "grid.hpp"
+#include "backend.hpp"
 
 int main(void)
 {
@@ -20,7 +21,8 @@ int main(void)
     gridBackground.setOutlineColor(gridBackgroundColor);
     gridBackground.setOutlineThickness(5.f);
 
-    Grid grid(gridPosition, nodeSize, gapWidth, cols, rows);
+    Grid grid(gridPosition, nodeSize, gapWidth, rows, cols);
+    Backend backend(&grid);
 
     // create the window
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Pathfinding Algorithms", sf::Style::Titlebar | sf::Style::Close);
@@ -35,6 +37,13 @@ int main(void)
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
+            else if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                    backend.leftMouseButtonCliked({event.mouseButton.x, event.mouseButton.y});
+                else if (event.mouseButton.button == sf::Mouse::Right)
+                    backend.rightMouseButtonCliked({event.mouseButton.x, event.mouseButton.y});
+            }
         }
 
         // clear the window with black color
