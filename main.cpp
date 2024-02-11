@@ -12,16 +12,9 @@ int main(void)
     const unsigned int rows = 30, cols = 45;
     const sf::Color gridBackgroundColor = sf::Color(200, 200, 200);
     
-    const sf::Vector2f gridSize(nodeSize.x * cols + gapWidth * (cols - 1), nodeSize.y * rows + gapWidth * (rows - 1));
-
     // create drawable objects
-    sf::RectangleShape gridBackground(gridSize);
-    gridBackground.setFillColor(gridBackgroundColor);
-    gridBackground.setPosition(gridPosition);
-    gridBackground.setOutlineColor(gridBackgroundColor);
-    gridBackground.setOutlineThickness(5.f);
 
-    Grid grid(gridPosition, nodeSize, gapWidth, rows, cols);
+    Grid grid(gridPosition, nodeSize, gapWidth, rows, cols, gridBackgroundColor, gridBackgroundColor);
     Backend backend(&grid);
 
     // create the window
@@ -50,7 +43,6 @@ int main(void)
         window.clear(sf::Color::Black);
 
         // draw everything here
-        window.draw(gridBackground);
         grid.draw(window);
 
         // end the current frame
