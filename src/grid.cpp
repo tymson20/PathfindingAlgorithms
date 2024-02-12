@@ -47,21 +47,28 @@ void Grid::draw(sf::RenderWindow& renderWindow) const
     }
 }
 
-void Grid::setNodeType(const sf::Vector2i& cursorPosition, Node::Type type)
+Node* Grid::setNodeType(const sf::Vector2f& cursorPosition, Node::Type type)
 {
     if (cursorPosition.x < getPosition().x || cursorPosition.x > getPosition().x + getSize().x ||
         cursorPosition.y < getPosition().y || cursorPosition.y > getPosition().y + getSize().y)
     {
         std::cout << "You clicked on the outline" << std::endl;
-        return;
+        return nullptr;
     }
     static const float gapDetectRowValue = m_NodeSize.y/(m_NodeSize.y + m_GapWidth);
     static const float gapDetectColValue = m_NodeSize.x/(m_NodeSize.x + m_GapWidth);
     float rowFloat, colFloat;
-    rowFloat = ((float)cursorPosition.y - getPosition().y)/(m_NodeSize.y + m_GapWidth);
-    colFloat = ((float)cursorPosition.x - getPosition().x)/(m_NodeSize.x + m_GapWidth);
+    rowFloat = (cursorPosition.y - getPosition().y)/(m_NodeSize.y + m_GapWidth);
+    colFloat = (cursorPosition.x - getPosition().x)/(m_NodeSize.x + m_GapWidth);
     if ((rowFloat - (int)rowFloat) <= gapDetectRowValue && (colFloat - (int)colFloat) <= gapDetectColValue)
-        m_Matrix[(unsigned int)rowFloat][(unsigned int)colFloat].setType(type);
+    {
+        Node* node = &m_Matrix[(unsigned int)rowFloat][(unsigned int)colFloat];
+        node->setType(type);
+        return node;
+    }
     else
+    {
         std::cout << "You clicked on the gap." << std::endl;
+        return nullptr;
+    }
 }

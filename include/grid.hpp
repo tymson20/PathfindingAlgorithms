@@ -18,7 +18,7 @@ public:
 
     void draw(sf::RenderWindow& renderWindow) const;
 
-    void setNodeType(const sf::Vector2i& cursorPosition, Node::Type type);
+    Node* setNodeType(const sf::Vector2f& cursorPosition, Node::Type type);
 
 private:
     const sf::Vector2f m_NodeSize;

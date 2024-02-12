@@ -7,8 +7,8 @@
 const std::unordered_map<Node::Type, sf::Color> Node::s_MapColors = 
 {
     {Node::Type::Empty, sf::Color::White},
-    {Node::Type::Barrier, sf::Color()},
-    {Node::Type::Start, sf::Color::Green},
+    {Node::Type::Barrier, sf::Color(50, 50, 50)},
+    {Node::Type::Start, sf::Color(0, 227, 13)},
     {Node::Type::End, sf::Color::Red},
     {Node::Type::Path, sf::Color()},
     {Node::Type::Visited, sf::Color()}

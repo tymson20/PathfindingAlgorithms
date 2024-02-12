@@ -3,19 +3,23 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "backend.hpp"
+#include "legendBar.hpp"
 
 int main(void)
 {
-    const sf::Vector2f gridPosition(40.f, 40.f);
+    const sf::Vector2f gridPosition(40.f, 20.f);
     const sf::Vector2f nodeSize(15.f, 15.f);
     const float gapWidth = 2.f;
     const unsigned int rows = 30, cols = 45;
     const sf::Color gridBackgroundColor = sf::Color(200, 200, 200);
+    sf::Font font;
+    font.loadFromFile("../Minecraft.ttf");
     
     // create drawable objects
 
     Grid grid(gridPosition, nodeSize, gapWidth, rows, cols, gridBackgroundColor, gridBackgroundColor);
-    Backend backend(&grid);
+    LegendBar legendBar(sf::Vector2f(40, 550), sf::Vector2f(750, 40), font);
+    Backend backend(&grid, &legendBar);
 
     // create the window
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Pathfinding Algorithms", sf::Style::Titlebar | sf::Style::Close);
@@ -44,6 +48,7 @@ int main(void)
 
         // draw everything here
         grid.draw(window);
+        legendBar.draw(window);
 
         // end the current frame
         window.display();
