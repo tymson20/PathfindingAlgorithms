@@ -3,11 +3,12 @@
 
 #include "grid.hpp"
 #include "legendBar.hpp"
+#include "settingsBar.hpp"
 
 class Backend
 {
 public:
-    Backend(Grid* const grid, LegendBar* const legendBar);
+    Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar);
 
     void leftMouseButtonCliked(const sf::Vector2i& cursorPosition);
 
@@ -16,9 +17,11 @@ public:
 private:
     Grid* const m_Grid;
     LegendBar* const m_LegendBar;
+    SettingsBar* const m_SettingsBar;
     Node::Type m_SelectedNodeType;
     Node* m_CurrentStartNode;
     Node* m_CurrentEndNode;
+    Algorithm m_CurrentAlgorithm;
 };
 
 #endif // BACKEND_HPP
