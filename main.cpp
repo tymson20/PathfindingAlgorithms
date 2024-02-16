@@ -5,6 +5,7 @@
 #include "backend.hpp"
 #include "legendBar.hpp"
 #include "settingsBar.hpp"
+#include "buttonsBar.hpp"
 
 int main(void)
 {
@@ -24,7 +25,8 @@ int main(void)
     Grid grid(gridPosition, nodeSize, gapWidth, rows, cols, gridBackgroundColor, gridBackgroundColor);
     LegendBar legendBar(sf::Vector2f(20.f, 550.f), sf::Vector2f(700.f, 40.f), font);
     SettingsBar settingsBar(sf::Vector2f(740.f, 150.f), sf::Vector2f(200.f, 200.f), font);
-    Backend backend(&grid, &legendBar, &settingsBar);
+    ButtonsBar buttonsBar(sf::Vector2f(750.f, 400.f), sf::Vector2f(200.f, 125.f), font);
+    Backend backend(&grid, &legendBar, &settingsBar, &buttonsBar);
 
     // create the window
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Pathfinding Algorithms", sf::Style::Titlebar | sf::Style::Close);
@@ -55,6 +57,7 @@ int main(void)
         grid.draw(window);
         legendBar.draw(window);
         settingsBar.draw(window);
+        buttonsBar.draw(window);
         window.draw(GUIName);
 
         // end the current frame

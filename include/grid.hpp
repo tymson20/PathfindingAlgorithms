@@ -20,6 +20,12 @@ public:
 
     Node* setNodeType(const sf::Vector2f& cursorPosition, Node::Type type);
 
+    std::vector<Node*> getNodes();
+
+    std::vector<Node*> getNeighbours(Node* node);
+
+    void clear();
+
 private:
     const sf::Vector2f m_NodeSize;
     const float m_GapWidth;

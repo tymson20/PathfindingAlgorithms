@@ -26,7 +26,7 @@ Grid::Grid(const sf::Vector2f& position, const sf::Vector2f& nodeSize, float gap
         rowVector.reserve(columns);
         for (std::size_t col = 0; col < columns; col++)
         {
-            rowVector.emplace_back(std::move(Node({pos_X, pos_Y}, nodeSize)));
+            rowVector.emplace_back(std::move(Node(row, col, {pos_X, pos_Y}, nodeSize)));
             pos_X += (gapWidth + nodeSize.x);
         }
         pos_Y += (gapWidth + nodeSize.y);
@@ -70,5 +70,40 @@ Node* Grid::setNodeType(const sf::Vector2f& cursorPosition, Node::Type type)
     {
         //std::cout << "You clicked on the gap." << std::endl;
         return nullptr;
+    }
+}
+
+std::vector<Node*> Grid::getNodes()
+{
+    std::vector<Node*> nodes;
+    nodes.reserve(m_Rows * m_Columns);
+    for (auto& row : m_Matrix)
+        for (std::size_t i = 0; i < m_Columns; i++)
+            nodes.push_back(&(row[i]));
+    return nodes;
+}
+
+std::vector<Node*> Grid::getNeighbours(Node* node)
+{
+    std::vector<Node*> neighbours;
+    neighbours.reserve(4);
+    if (node->m_IndexPosition.row != 0 && m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
+        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col]));
+    if (node->m_IndexPosition.row != m_Rows-1 && m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
+        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col]));
+    if (node->m_IndexPosition.col != 0 && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1].getType() != Node::Type::Barrier)
+        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1]));
+    if (node->m_IndexPosition.col != m_Columns-1 && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1].getType() != Node::Type::Barrier)
+        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1]));
+    neighbours.shrink_to_fit();
+    return neighbours;
+}
+
+void Grid::clear()
+{
+    for (auto& row : m_Matrix)
+    {
+        for (Node& node : row)
+            node.setType(Node::Type::Empty);
     }
 }

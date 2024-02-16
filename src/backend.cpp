@@ -3,8 +3,8 @@
 #include <iostream>
 #include "backend.hpp"
 
-Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar)
-    : m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar), m_SelectedNodeType(Node::Type::Barrier),
+Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar, ButtonsBar* const buttonsBar)
+    : m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar), m_ButtonsBar(buttonsBar), m_SelectedNodeType(Node::Type::Barrier),
     m_CurrentStartNode(nullptr), m_CurrentEndNode(nullptr), m_CurrentAlgorithm(Algorithm::Dijkstra) {}
 
 void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
@@ -43,7 +43,33 @@ void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
     // Settings
     else if (m_SettingsBar->getGlobalBounds().contains(cursorPositionFloat))
     {
+        std::cout << "Settings" << std::endl;
         m_CurrentAlgorithm = m_SettingsBar->update(cursorPositionFloat);
+    }
+    // Buttons
+    else if (m_ButtonsBar->getGlobalBounds().contains(cursorPositionFloat))
+    {
+        std::cout << "Buttons" << std::endl;
+        ButtonsBar::ButtonType buttonType = m_ButtonsBar->update(cursorPositionFloat);
+        if (buttonType == ButtonsBar::ButtonType::Start)
+        {
+            switch (m_CurrentAlgorithm)
+            {
+                case Algorithm::Dijkstra:
+                    std::cout << "Dijkstra" << std::endl;
+                    break;
+                case Algorithm::Astar:
+                    std::cout << "A star" << std::endl;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (buttonType == ButtonsBar::ButtonType::Clear)
+        {
+            m_Grid->clear();
+        }
+
     }
 }
 
