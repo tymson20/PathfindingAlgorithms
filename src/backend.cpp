@@ -1,19 +1,23 @@
 #define SFML_STATIC
 
 #include <iostream>
+#include <SFML/Window/Mouse.hpp>
 #include "backend.hpp"
 
+// algorithms declarations
+void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode);
+
 Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar, ButtonsBar* const buttonsBar)
-    : m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar), m_ButtonsBar(buttonsBar), m_SelectedNodeType(Node::Type::Barrier),
-    m_CurrentStartNode(nullptr), m_CurrentEndNode(nullptr), m_CurrentAlgorithm(Algorithm::Dijkstra) {}
+    : m_LeftMouseButtonPressed(false), m_RightMouseButtonPressed(false), m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar),
+    m_ButtonsBar(buttonsBar), m_SelectedNodeType(Node::Type::Barrier), m_CurrentStartNode(nullptr), m_CurrentEndNode(nullptr),
+    m_CurrentAlgorithm(Algorithm::Dijkstra) {}
 
-void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
-{
-    //std::cout << cursorPosition.x << ", " << cursorPosition.y << std::endl;
-    //std::cout << (m_Grid->getGlobalBounds().contains(sf::Vector2f(cursorPosition)) ? "Belongs" : "Doesn't belong") << std::endl;
-
+void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
+{   
+    std::cout << "Left pressed once" << std::endl;
+    m_LeftMouseButtonPressed = true;
     sf::Vector2f cursorPositionFloat(cursorPosition);
-    
+
     // Grid
     if (m_Grid->getGlobalBounds().contains(cursorPositionFloat))
     {
@@ -34,8 +38,9 @@ void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
             }
         }
     }
+
     // Legend
-    else if (m_LegendBar->getGlobalBounds().contains(cursorPositionFloat))
+    if (m_LegendBar->getGlobalBounds().contains(cursorPositionFloat))
     {
         Node::Type selected = m_LegendBar->update(cursorPositionFloat);
         m_SelectedNodeType = selected != Node::Type::Empty ? selected : m_SelectedNodeType;
@@ -53,16 +58,20 @@ void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
         ButtonsBar::ButtonType buttonType = m_ButtonsBar->update(cursorPositionFloat);
         if (buttonType == ButtonsBar::ButtonType::Start)
         {
-            switch (m_CurrentAlgorithm)
+            if (m_CurrentStartNode && m_CurrentEndNode && m_CurrentStartNode->getType() == Node::Type::Start && m_CurrentEndNode->getType() == Node::Type::End)
             {
-                case Algorithm::Dijkstra:
-                    std::cout << "Dijkstra" << std::endl;
-                    break;
-                case Algorithm::Astar:
-                    std::cout << "A star" << std::endl;
-                    break;
-                default:
-                    break;
+                switch (m_CurrentAlgorithm)
+                {
+                    case Algorithm::Dijkstra:
+                        std::cout << "Dijkstra" << std::endl;
+                        dijkstra(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
+                        break;
+                    case Algorithm::Astar:
+                        std::cout << "A star" << std::endl;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         else if (buttonType == ButtonsBar::ButtonType::Clear)
@@ -73,12 +82,59 @@ void Backend::leftMouseButtonCliked(const sf::Vector2i& cursorPosition)
     }
 }
 
-void Backend::rightMouseButtonCliked(const sf::Vector2i& cursorPosition)
+void Backend::leftMouseButtonReleased()
 {
-    sf::Vector2f cursorPositionFloat(cursorPosition);
-    // Grid
-    if (m_Grid->getGlobalBounds().contains(cursorPositionFloat))
+    m_LeftMouseButtonPressed = false;
+}
+
+void Backend::rightMouseButtonPressed(const sf::Vector2i& cursorPosition)
+{
+     std::cout << "Right pressed once" << std::endl;
+    m_RightMouseButtonPressed = true;
+}
+
+void Backend::rightMouseButtonReleased()
+{
+    m_RightMouseButtonPressed = false;
+}
+
+void Backend::update(sf::RenderWindow& renderWindow)
+{
+    if (m_LeftMouseButtonPressed && m_SelectedNodeType == Node::Type::Barrier)
     {
-        m_Grid->setNodeType(cursorPositionFloat, Node::Type::Empty);
+        std::cout << "Left" << std::endl;
+        sf::Vector2f cursorPosition(sf::Mouse::getPosition(renderWindow));
+
+        // Grid
+        if (m_Grid->getGlobalBounds().contains(cursorPosition))
+        {
+            Node* node = m_Grid->setNodeType(cursorPosition, m_SelectedNodeType);
+            if (node)
+            {
+                if (m_SelectedNodeType == Node::Type::Start)
+                {
+                    if (m_CurrentStartNode)
+                        m_CurrentStartNode->setType(Node::Type::Empty);
+                    m_CurrentStartNode = node;
+                }
+                else if (m_SelectedNodeType == Node::Type::End)
+                {
+                    if (m_CurrentEndNode)
+                        m_CurrentEndNode->setType(Node::Type::Empty);
+                    m_CurrentEndNode = node;
+                }
+            }
+        }
+    }
+    if (m_RightMouseButtonPressed)
+    {
+        std::cout << "Right" << std::endl;
+        sf::Vector2f cursorPosition(sf::Mouse::getPosition(renderWindow));
+
+        // Grid
+        if (m_Grid->getGlobalBounds().contains(cursorPosition))
+        {
+            m_Grid->setNodeType(cursorPosition, Node::Type::Empty);
+        }
     }
 }

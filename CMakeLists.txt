@@ -7,7 +7,7 @@ project(PathfindingAlgorithms)
 include_directories(${PROJECT_SOURCE_DIR}/libraries/SFML/include
                     ${PROJECT_SOURCE_DIR}/include)
 
-set(SOURCES src/node.cpp src/grid.cpp src/backend.cpp src/legendBar.cpp src/settingsBar.cpp src/buttonsBar.cpp)
+set(SOURCES src/node.cpp src/grid.cpp src/backend.cpp src/legendBar.cpp src/settingsBar.cpp src/buttonsBar.cpp src/algorithms.cpp)
 
 add_executable(PathfindingAlgorithms main.cpp ${SOURCES})
 

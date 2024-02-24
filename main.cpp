@@ -44,11 +44,20 @@ int main(void)
             else if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
-                    backend.leftMouseButtonCliked({event.mouseButton.x, event.mouseButton.y});
+                    backend.leftMouseButtonPressed({event.mouseButton.x, event.mouseButton.y});
                 else if (event.mouseButton.button == sf::Mouse::Right)
-                    backend.rightMouseButtonCliked({event.mouseButton.x, event.mouseButton.y});
+                    backend.rightMouseButtonPressed({event.mouseButton.x, event.mouseButton.y});
+            }
+            else if (event.type == sf::Event::MouseButtonReleased)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                    backend.leftMouseButtonReleased();
+                else if (event.mouseButton.button == sf::Mouse::Right)
+                    backend.rightMouseButtonReleased();
             }
         }
+
+        backend.update(window);
 
         // clear the window with black color
         window.clear(sf::Color::Black);
