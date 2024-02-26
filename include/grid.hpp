@@ -22,14 +22,17 @@ public:
 
     std::vector<Node*> getNodes();
 
-    std::vector<Node*> getNeighbours(Node* node);
+    std::vector<std::pair<Node*, float>> getNeighbours(Node* node);
 
     void clear();
+
+    void setDiagonalMode(bool diagonal) { m_DiagonalMode = diagonal; }
 
 private:
     const sf::Vector2f m_NodeSize;
     const float m_GapWidth;
     const unsigned int m_Rows, m_Columns;
+    bool m_DiagonalMode;
     std::vector<std::vector<Node>> m_Matrix;
 };
 

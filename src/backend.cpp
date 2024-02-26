@@ -14,7 +14,6 @@ Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* cons
 
 void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
 {   
-    std::cout << "Left pressed once" << std::endl;
     m_LeftMouseButtonPressed = true;
     sf::Vector2f cursorPositionFloat(cursorPosition);
 
@@ -49,7 +48,9 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
     else if (m_SettingsBar->getGlobalBounds().contains(cursorPositionFloat))
     {
         std::cout << "Settings" << std::endl;
-        m_CurrentAlgorithm = m_SettingsBar->update(cursorPositionFloat);
+        auto result = m_SettingsBar->update(cursorPositionFloat);
+        m_CurrentAlgorithm = result.first;
+        m_Grid->setDiagonalMode(result.second);
     }
     // Buttons
     else if (m_ButtonsBar->getGlobalBounds().contains(cursorPositionFloat))
@@ -89,7 +90,6 @@ void Backend::leftMouseButtonReleased()
 
 void Backend::rightMouseButtonPressed(const sf::Vector2i& cursorPosition)
 {
-     std::cout << "Right pressed once" << std::endl;
     m_RightMouseButtonPressed = true;
 }
 
@@ -102,7 +102,6 @@ void Backend::update(sf::RenderWindow& renderWindow)
 {
     if (m_LeftMouseButtonPressed && m_SelectedNodeType == Node::Type::Barrier)
     {
-        std::cout << "Left" << std::endl;
         sf::Vector2f cursorPosition(sf::Mouse::getPosition(renderWindow));
 
         // Grid
@@ -128,7 +127,6 @@ void Backend::update(sf::RenderWindow& renderWindow)
     }
     if (m_RightMouseButtonPressed)
     {
-        std::cout << "Right" << std::endl;
         sf::Vector2f cursorPosition(sf::Mouse::getPosition(renderWindow));
 
         // Grid

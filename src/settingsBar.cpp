@@ -22,9 +22,13 @@ SettingsBar::SettingsBar(const sf::Vector2f& position, const sf::Vector2f& size,
     algorithms[1].rectangleShape.setFillColor(sf::Color::Black);
     algorithms[1].rectangleShape.setOutlineColor(sf::Color::White);
     algorithms[1].rectangleShape.setOutlineThickness(2.f);
+
+    m_Diagonal= sf::Text("Diagonal", font);
+    m_Diagonal.setPosition(sf::Vector2f(739.f, 230.f));
+    m_Diagonal.setFillColor(sf::Color::White);
 }
 
-Algorithm SettingsBar::update(const sf::Vector2f& cursorPosition)
+std::pair<Algorithm, bool> SettingsBar::update(const sf::Vector2f& cursorPosition)
 {
     for (int i = 0; i < 2; i++)
     {
@@ -36,7 +40,14 @@ Algorithm SettingsBar::update(const sf::Vector2f& cursorPosition)
             break;
         }
     }
-    return m_CurrentAlgorithm->algorithm;
+    if (m_Diagonal.getGlobalBounds().contains(cursorPosition))
+    {
+        if (m_Diagonal.getStyle() == sf::Text::Style::Regular)
+            m_Diagonal.setStyle(sf::Text::Style::Underlined);
+        else
+            m_Diagonal.setStyle(sf::Text::Style::Regular);
+    }
+    return std::make_pair(m_CurrentAlgorithm->algorithm, m_Diagonal.getStyle() == sf::Text::Style::Underlined);
 }
 
 void SettingsBar::draw(sf::RenderWindow& renderWindow) const
@@ -46,4 +57,5 @@ void SettingsBar::draw(sf::RenderWindow& renderWindow) const
         renderWindow.draw(algorithms[i].rectangleShape);
         renderWindow.draw(algorithms[i].text);
     }
+    renderWindow.draw(m_Diagonal);
 }

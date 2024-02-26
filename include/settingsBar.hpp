@@ -18,7 +18,7 @@ class SettingsBar
 public:
     SettingsBar(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font);
 
-    Algorithm update(const sf::Vector2f& cursorPosition);
+    std::pair<Algorithm, bool> update(const sf::Vector2f& cursorPosition);
 
     void draw(sf::RenderWindow& renderWindow) const;
 
@@ -29,6 +29,7 @@ private:
     const sf::Vector2f m_Size;
     AlgorithmElement* m_CurrentAlgorithm;
     AlgorithmElement algorithms[2];
+    sf::Text m_Diagonal;
 };
 
 #endif // SETTINGSBAR_HPP

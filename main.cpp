@@ -24,7 +24,7 @@ int main(void)
 
     Grid grid(gridPosition, nodeSize, gapWidth, rows, cols, gridBackgroundColor, gridBackgroundColor);
     LegendBar legendBar(sf::Vector2f(20.f, 550.f), sf::Vector2f(700.f, 40.f), font);
-    SettingsBar settingsBar(sf::Vector2f(740.f, 150.f), sf::Vector2f(200.f, 200.f), font);
+    SettingsBar settingsBar(sf::Vector2f(740.f, 130.f), sf::Vector2f(200.f, 200.f), font);
     ButtonsBar buttonsBar(sf::Vector2f(750.f, 400.f), sf::Vector2f(200.f, 125.f), font);
     Backend backend(&grid, &legendBar, &settingsBar, &buttonsBar);
 

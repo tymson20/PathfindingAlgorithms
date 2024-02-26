@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cmath>
 #include "grid.hpp"
 
 Grid::Grid(const sf::Vector2f& position, const sf::Vector2f& nodeSize, float gapWidth, unsigned int rows, unsigned int columns, sf::Color fillColor, sf::Color outlineColor)
     : RectangleShape(sf::Vector2f((float)columns * nodeSize.x + (float)(columns - 1) * gapWidth, (float)rows * nodeSize.y + (float)(rows - 1) * gapWidth)),
-    m_NodeSize(nodeSize), m_GapWidth(gapWidth), m_Rows(rows), m_Columns(columns)
+    m_NodeSize(nodeSize), m_GapWidth(gapWidth), m_Rows(rows), m_Columns(columns), m_DiagonalMode(false)
 {
     if (nodeSize.x < 0.f || nodeSize.y < 0.f)
         throw std::invalid_argument("The nodeSize argument should has positive values!");
@@ -83,18 +84,54 @@ std::vector<Node*> Grid::getNodes()
     return nodes;
 }
 
-std::vector<Node*> Grid::getNeighbours(Node* node)
+std::vector<std::pair<Node*, float>> Grid::getNeighbours(Node* node)
 {
-    std::vector<Node*> neighbours;
-    neighbours.reserve(4);
-    if (node->m_IndexPosition.row != 0 && m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
-        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col]));
-    if (node->m_IndexPosition.row != m_Rows-1 && m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
-        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col]));
-    if (node->m_IndexPosition.col != 0 && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1].getType() != Node::Type::Barrier)
-        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1]));
-    if (node->m_IndexPosition.col != m_Columns-1 && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1].getType() != Node::Type::Barrier)
-        neighbours.push_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1]));
+    bool up = false, down = false, left = false, right = false;
+    bool upEmpty = false, downEmpty = false, leftEmpty = false, rightEmpty = false;
+    std::vector<std::pair<Node*, float>> neighbours;
+    neighbours.reserve(8);
+
+    if (node->m_IndexPosition.row != 0)
+        up = true;
+    if (node->m_IndexPosition.row != m_Rows-1)
+        down = true;
+    if (node->m_IndexPosition.col != 0)
+        left = true;
+    if (node->m_IndexPosition.col != m_Columns-1)
+        right = true;
+    if (up && m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
+    {
+        upEmpty = true;
+        neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col]), 1.f);
+    }
+    if (down && m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col].getType() != Node::Type::Barrier)
+    {
+        downEmpty = true;
+        neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col]), 1.f);
+    }
+    if (left && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1].getType() != Node::Type::Barrier)
+    {
+        leftEmpty = true;
+        neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col-1]), 1.f);
+    }
+    if (right && m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1].getType() != Node::Type::Barrier)
+    {
+        rightEmpty = true;
+        neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row][node->m_IndexPosition.col+1]), 1.f);
+    }
+    if (m_DiagonalMode)
+    {
+        const float value = sqrt(2);
+        if (up && left && m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col-1].getType() != Node::Type::Barrier && (upEmpty || leftEmpty))
+            neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col-1]), value);
+        if (up && right && m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col+1].getType() != Node::Type::Barrier && (upEmpty || rightEmpty))
+            neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row-1][node->m_IndexPosition.col+1]), value);
+        if (down && left && m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col-1].getType() != Node::Type::Barrier && (downEmpty || leftEmpty))
+            neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col-1]), value);
+        if (down && right && m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col+1].getType() != Node::Type::Barrier && (downEmpty || rightEmpty))
+            neighbours.emplace_back(&(m_Matrix[node->m_IndexPosition.row+1][node->m_IndexPosition.col+1]), value);
+    }
+    
     neighbours.shrink_to_fit();
     return neighbours;
 }

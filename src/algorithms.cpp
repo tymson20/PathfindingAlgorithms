@@ -7,13 +7,13 @@
 void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode)
 {
     std::vector<Node*> nodes = grid->getNodes();
-    std::map<Node*, int> distances;
+    std::map<Node*, float> distances;
     std::map<Node*, Node*> previous;
     for (Node* node : nodes) {
-        distances[node] = std::numeric_limits<int>::max();
+        distances[node] = std::numeric_limits<float>::max();
         previous[node] = NULL;
     }
-    distances[startNode] = 0;
+    distances[startNode] = 0.f;
     std::set<Node*> unvisitedSet(nodes.cbegin(), nodes.cend());
     Node* currentNode = startNode;
 
@@ -22,13 +22,13 @@ void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNo
     };
 
     while (true) {
-        std::vector<Node*> neighbours = grid->getNeighbours(currentNode);
+        std::vector<std::pair<Node*, float>> neighbours = grid->getNeighbours(currentNode);
         for (auto neighbour : neighbours) {
-            if (unvisitedSet.find(neighbour) != unvisitedSet.cend()) {
-                int distance = distances[currentNode] + 1;
-                if (distance < distances[neighbour]) {
-                    distances[neighbour] = distance;
-                    previous[neighbour] = currentNode;
+            if (unvisitedSet.find(neighbour.first) != unvisitedSet.cend()) {
+                float distance = distances[currentNode] + neighbour.second;
+                if (distance < distances[neighbour.first]) {
+                    distances[neighbour.first] = distance;
+                    previous[neighbour.first] = currentNode;
                 }
             }
         }
