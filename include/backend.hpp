@@ -6,6 +6,7 @@
 #include "legendBar.hpp"
 #include "settingsBar.hpp"
 #include "buttonsBar.hpp"
+#include "solution.hpp"
 
 class Backend
 {
@@ -31,6 +32,7 @@ private:
     Node* m_CurrentStartNode;
     Node* m_CurrentEndNode;
     Algorithm m_CurrentAlgorithm;
+    Solution m_Solution;
 };
 
 #endif // BACKEND_HPP

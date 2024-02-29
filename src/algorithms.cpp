@@ -1,11 +1,17 @@
+#define SFML_STATIC
+
 #include <map>
 #include <set>
 #include <limits>
 #include <algorithm>
+#include <SFML/System/Clock.hpp>
 #include "grid.hpp"
+#include "solution.hpp"
 
-void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode)
+Solution dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode)
 {
+    Solution solution;
+    sf::Clock clock;
     std::vector<Node*> nodes = grid->getNodes();
     std::map<Node*, float> distances;
     std::map<Node*, Node*> previous;
@@ -33,7 +39,7 @@ void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNo
             }
         }
         unvisitedSet.erase(currentNode);
-        currentNode->setType(Node::Type::Visited);
+        solution.addElement(currentNode, clock.getElapsedTime());
 
         Node* nearestNode = nullptr;
         if (currentNode == destinationNode) {
@@ -44,22 +50,14 @@ void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNo
                 shortestPathReversed.push_back(previousNode);
                 currentNode = previousNode;
             }
-            //*cost = distances[destinationNode];
-            //std::vector<Node*> shortestPath(shortestPathReversed.rbegin(), shortestPathReversed.rend());
-            //return shortestPath;
-            for (auto it = shortestPathReversed.rbegin(); it < shortestPathReversed.rend(); it++)
-                (*it)->setType(Node::Type::Path);
-            startNode->setType(Node::Type::Start);
-            destinationNode->setType(Node::Type::End);
-            return;
+            solution.setPath({shortestPathReversed.crbegin(), shortestPathReversed.crend()});
+            return solution;
         }
         else {
             nearestNode = *std::min_element(unvisitedSet.cbegin(), unvisitedSet.cend(), compareDistance);
             if (distances[nearestNode] == std::numeric_limits<int>::max()) {
                 // There is no connection between nodes.
-                //*cost = -1;
-                //return {};
-                return;
+                return solution;
             }
             else currentNode = nearestNode;
         }

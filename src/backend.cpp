@@ -5,7 +5,7 @@
 #include "backend.hpp"
 
 // algorithms declarations
-void dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode);
+Solution dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode);
 
 Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar, ButtonsBar* const buttonsBar)
     : m_LeftMouseButtonPressed(false), m_RightMouseButtonPressed(false), m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar),
@@ -65,7 +65,9 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
                 {
                     case Algorithm::Dijkstra:
                         std::cout << "Dijkstra" << std::endl;
-                        dijkstra(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
+                        m_Solution = dijkstra(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
+                        m_Solution.setSpeed(100.f);
+                        m_Solution.start();
                         break;
                     case Algorithm::Astar:
                         std::cout << "A star" << std::endl;
@@ -135,4 +137,5 @@ void Backend::update(sf::RenderWindow& renderWindow)
             m_Grid->setNodeType(cursorPosition, Node::Type::Empty);
         }
     }
+    m_Solution.update();
 }
