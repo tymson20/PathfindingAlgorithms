@@ -10,10 +10,10 @@ const Node::Type LegendBar::types[5] = {Node::Type::Barrier,
                                      Node::Type::Visited};
 
 const sf::Color LegendBar::colors[5] = {sf::Color(50, 50, 50),
-                                        sf::Color(0, 227, 13),
                                         sf::Color::Red,
-                                        sf::Color(255, 242, 0),
-                                        sf::Color(250, 251, 190)};
+                                        sf::Color(0, 227, 13),
+                                        sf::Color(0, 93, 199),
+                                        sf::Color(110, 175, 250)};
 
 const sf::String LegendBar::labels[5] = {"Barrier",
                                          "Start",
