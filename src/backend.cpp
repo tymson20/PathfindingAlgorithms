@@ -6,6 +6,7 @@
 
 // algorithms declarations
 Solution dijkstra(Grid* const grid, Node* const startNode, Node* const destinationNode);
+Solution aStar(Grid* const grid, Node* const startNode, Node* const destinationNode);
 
 Backend::Backend(Grid* const grid, LegendBar* const legendBar, SettingsBar* const settingsBar, ButtonsBar* const buttonsBar)
     : m_LeftMouseButtonPressed(false), m_RightMouseButtonPressed(false), m_Grid(grid), m_LegendBar(legendBar), m_SettingsBar(settingsBar),
@@ -71,6 +72,9 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
                         break;
                     case Algorithm::Astar:
                         std::cout << "A star" << std::endl;
+                        m_Solution = aStar(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
+                        m_Solution.setSpeed(100.f);
+                        m_Solution.start();
                         break;
                     default:
                         break;
@@ -79,9 +83,14 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
         }
         else if (buttonType == ButtonsBar::ButtonType::Clear)
         {
+            m_Solution.stop();
             m_Grid->clear();
         }
-
+        else if (buttonType == ButtonsBar::ButtonType::ClearAll)
+        {
+            m_Solution.stop();
+            m_Grid->clearAll();
+        }
     }
 }
 

@@ -141,6 +141,16 @@ void Grid::clear()
     for (auto& row : m_Matrix)
     {
         for (Node& node : row)
+            if (node.getType() != Node::Type::Barrier)
+                node.setType(Node::Type::Empty);
+    }
+}
+
+void Grid::clearAll()
+{
+    for (auto& row : m_Matrix)
+    {
+        for (Node& node : row)
             node.setType(Node::Type::Empty);
     }
 }

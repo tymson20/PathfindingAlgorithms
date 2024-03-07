@@ -25,7 +25,9 @@ public:
     std::vector<std::pair<Node*, float>> getNeighbours(Node* node);
 
     void clear();
+    void clearAll();
 
+    bool getDiagonalMode() const { return m_DiagonalMode; }
     void setDiagonalMode(bool diagonal) { m_DiagonalMode = diagonal; }
 
 private:

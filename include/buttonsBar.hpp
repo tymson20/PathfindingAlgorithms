@@ -13,7 +13,7 @@ struct Button {
 class ButtonsBar
 {
 public:
-    enum class ButtonType {None, Start, Clear};
+    enum class ButtonType {None, Start, Clear, ClearAll};
 
 public:
     ButtonsBar(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Font& font);
@@ -29,6 +29,7 @@ private:
     const sf::Vector2f m_Size;
     Button m_StartButton;
     Button m_ClearButton;
+    Button m_ClearAllButton;
 };
 
 #endif // BUTTONSBAR_HPP
