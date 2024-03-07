@@ -9,6 +9,8 @@
 
 int main(void)
 {
+    int fpsCounter = 0;
+    sf::Clock clock;
     const sf::Vector2f gridPosition(20.f, 20.f);
     const sf::Vector2f nodeSize(15.f, 15.f);
     const float gapWidth = 2.f;
@@ -22,10 +24,13 @@ int main(void)
     sf::Text GUIName("Pathfinding\nalgorithms", font, 43U);
     GUIName.setPosition(sf::Vector2f(730.f, 20.f));
 
+    sf::Text fpsText = sf::Text("0 fps", font, 10U);
+    fpsText.setFillColor(sf::Color::Green);
+
     Grid grid(gridPosition, nodeSize, gapWidth, rows, cols, gridBackgroundColor, gridBackgroundColor);
     LegendBar legendBar(sf::Vector2f(20.f, 550.f), sf::Vector2f(700.f, 40.f), font);
     SettingsBar settingsBar(sf::Vector2f(740.f, 130.f), sf::Vector2f(200.f, 200.f), font);
-    ButtonsBar buttonsBar(sf::Vector2f(750.f, 400.f), sf::Vector2f(200.f, 125.f), font);
+    ButtonsBar buttonsBar(sf::Vector2f(750.f, 400.f), sf::Vector2f(200.f, 175.f), font);
     Backend backend(&grid, &legendBar, &settingsBar, &buttonsBar);
 
     // create the window
@@ -57,12 +62,22 @@ int main(void)
             }
         }
 
+        if (clock.getElapsedTime().asMilliseconds() >= 1000)
+        {
+            fpsText.setString(std::to_string(fpsCounter) + " fps");
+            clock.restart();
+            fpsCounter = 0;
+        }
+        else
+            fpsCounter += 1;
+        
         backend.update(window);
 
         // clear the window with black color
         window.clear(sf::Color::Black);
 
         // draw everything here
+        window.draw(fpsText);
         grid.draw(window);
         legendBar.draw(window);
         settingsBar.draw(window);
