@@ -4,4 +4,18 @@ set(CXX_STANDARD 17)
 
 project(PathfindingAlgorithms)
 
-add_executable(PathfindingAlgorithms main.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/libraries/SFML/include
+                    ${PROJECT_SOURCE_DIR}/include)
+
+set(SOURCES src/node.cpp src/grid.cpp src/backend.cpp src/legendBar.cpp src/settingsBar.cpp src/buttonsBar.cpp src/algorithms.cpp src/solution.cpp)
+
+add_executable(PathfindingAlgorithms main.cpp ${SOURCES})
+
+target_link_libraries(PathfindingAlgorithms 
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/libsfml-graphics-s-d.a
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/libsfml-window-s-d.a
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/libsfml-system-s-d.a
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/libfreetype.a
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/opengl32.lib
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/gdi32.lib
+        ${PROJECT_SOURCE_DIR}/libraries/SFML/lib/winmm.lib)
