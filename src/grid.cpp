@@ -1,6 +1,5 @@
 #define SFML_STATIC
 
-#include <iostream>
 #include <stdexcept>
 #include <cmath>
 #include "grid.hpp"
@@ -53,7 +52,7 @@ Node* Grid::setNodeType(const sf::Vector2f& cursorPosition, Node::Type type)
     if (cursorPosition.x < getPosition().x || cursorPosition.x > getPosition().x + getSize().x ||
         cursorPosition.y < getPosition().y || cursorPosition.y > getPosition().y + getSize().y)
     {
-        //std::cout << "You clicked on the outline" << std::endl;
+        // Clicked on the outline
         return nullptr;
     }
     static const float gapDetectRowValue = m_NodeSize.y/(m_NodeSize.y + m_GapWidth);
@@ -69,7 +68,7 @@ Node* Grid::setNodeType(const sf::Vector2f& cursorPosition, Node::Type type)
     }
     else
     {
-        //std::cout << "You clicked on the gap." << std::endl;
+        // Clicked on the gap
         return nullptr;
     }
 }

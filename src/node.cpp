@@ -1,6 +1,5 @@
 #define SFML_STATIC
 
-#include <iostream>
 #include "node.hpp"
 
 

@@ -1,6 +1,5 @@
 #define SFML_STATIC
 
-#include <iostream>
 #include <SFML/Window/Mouse.hpp>
 #include "backend.hpp"
 
@@ -48,7 +47,6 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
     // Settings
     else if (m_SettingsBar->getGlobalBounds().contains(cursorPositionFloat))
     {
-        std::cout << "Settings" << std::endl;
         auto result = m_SettingsBar->update(cursorPositionFloat);
         m_CurrentAlgorithm = result.first;
         m_Grid->setDiagonalMode(result.second);
@@ -56,7 +54,6 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
     // Buttons
     else if (m_ButtonsBar->getGlobalBounds().contains(cursorPositionFloat))
     {
-        std::cout << "Buttons" << std::endl;
         ButtonsBar::ButtonType buttonType = m_ButtonsBar->update(cursorPositionFloat);
         if (buttonType == ButtonsBar::ButtonType::Start)
         {
@@ -65,13 +62,11 @@ void Backend::leftMouseButtonPressed(const sf::Vector2i& cursorPosition)
                 switch (m_CurrentAlgorithm)
                 {
                     case Algorithm::Dijkstra:
-                        std::cout << "Dijkstra" << std::endl;
                         m_Solution = dijkstra(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
                         m_Solution.setSpeed(100.f);
                         m_Solution.start();
                         break;
                     case Algorithm::Astar:
-                        std::cout << "A star" << std::endl;
                         m_Solution = aStar(m_Grid, m_CurrentStartNode, m_CurrentEndNode);
                         m_Solution.setSpeed(100.f);
                         m_Solution.start();
